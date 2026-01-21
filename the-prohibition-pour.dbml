@@ -1,0 +1,74 @@
+Table users{
+  id uuid pk
+  email varchar(255) unique
+  password varchar(255)
+  role_id uuid [ref: > roles.id]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table permissions{
+  id uuid pk
+  middleware varchar(255) unique
+  label varchar(255)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table roles{
+  id uuid pk
+  name varchar(255) unique
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table permission_role{
+  permission_id uuid [ref: > permissions.id]
+  role_id uuid [ref: > roles.id]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table recipes{
+  id uuid pk
+  slug varchar(255) unique
+  name varchar(255)
+  description varchar(255)
+  image_url varchar(255)
+  ingredients jsonb
+  steps jsonb
+  prep_time int
+  origin_country varchar(255)
+  story text
+  note text
+  pairings jsonb
+  is_alcoholic boolean
+  status varchar(255)
+  published_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table tags {
+  id uuid pk
+  type varchar(255)
+  name varchar(255)
+  created_at timestamp
+  updated_at timestamp
+} 
+
+Table recipe_tag{
+  id uuid pk
+  recipe_id uuid [ref: > recipes.id]
+  tag_id uuid [ref: > tags.id]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table ratings{
+  id uuid pk
+  recipe_id uuid [ref: > recipes.id]
+  rating int
+  created_at timestamp
+  updated_at timestamp
+}
