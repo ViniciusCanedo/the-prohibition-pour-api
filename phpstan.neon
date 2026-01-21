@@ -9,4 +9,4 @@ parameters:
         - database/
         - resources/views/
     ignoreErrors:
-        - '#^Access to an undefined property .*$#'
+        # - '#^Access to an undefined property .*$#'

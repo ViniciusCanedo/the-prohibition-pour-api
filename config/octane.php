@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Laravel\Octane\Contracts\OperationTerminated;
 use Laravel\Octane\Events\RequestHandled;
 use Laravel\Octane\Events\RequestReceived;
@@ -24,7 +26,6 @@ use Laravel\Octane\Listeners\StopWorkerIfNecessary;
 use Laravel\Octane\Octane;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Octane Server
@@ -151,7 +152,7 @@ return [
 
     'tables' => [
         'example:1000' => [
-            'name' => 'string:1000',
+            'name'  => 'string:1000',
             'votes' => 'int',
         ],
     ],
@@ -168,7 +169,7 @@ return [
     */
 
     'cache' => [
-        'rows' => 1000,
+        'rows'  => 1000,
         'bytes' => 10000,
     ],
 
@@ -220,5 +221,4 @@ return [
     */
 
     'max_execution_time' => 30,
-
 ];
