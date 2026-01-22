@@ -26,6 +26,7 @@ final class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'name'     => fake()->name(),
             'role_id'  => Role::factory(),
             'email'    => fake()->unique()->safeEmail(),
             'password' => self::$password ??= Hash::make('password'),
