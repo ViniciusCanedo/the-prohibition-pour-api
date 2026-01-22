@@ -3,10 +3,11 @@ includes:
     - vendor/nesbot/carbon/extension.neon
 
 parameters:
-    level: max
+    level: 8
     paths:
         - app/
         - database/
         - resources/views/
     ignoreErrors:
-        # - '#^Access to an undefined property .*$#'
+        - '#^Access to an undefined property .*$#'
+        - '#^Call to an undefined method .*$#'

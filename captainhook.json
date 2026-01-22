@@ -1,0 +1,27 @@
+{
+    "pre-commit": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "composer exec pint"
+            },
+            {
+                "action": "composer exec phpstan -- analyse --memory-limit=2G"
+            },
+            {
+                "action": "php artisan test --coverage --min=80"
+            },
+            {
+                "action": "php -d memory_limit=1G ./vendor/bin/pest --type-coverage --min=100"
+            }
+        ]
+    },
+    "post-merge": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "php artisan version:update"
+            }
+        ]
+    }
+}
