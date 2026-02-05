@@ -14,6 +14,7 @@ final class Recipe extends Model
 {
     /** @use HasFactory<\Database\Factories\RecipeFactory> */
     use HasFactory;
+
     use HasUuids;
 
     protected $guarded = [];
