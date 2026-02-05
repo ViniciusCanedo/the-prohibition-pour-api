@@ -21,7 +21,7 @@ final class UserResource extends JsonResource
             'name'        => $this->name,
             'email'       => $this->email,
             'role'        => $this->role->name,
-            'permissions' => $this->role->permissions->pluck('id') ?? [],
+            'permissions' => $this->role->permissions->pluck('id'),
         ];
     }
 }
