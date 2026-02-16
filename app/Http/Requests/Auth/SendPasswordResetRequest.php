@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Auth;
 
+use App\DTOs\Auth\SendPasswordResetDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class SendPasswordResetRequest extends FormRequest
@@ -26,5 +27,17 @@ final class SendPasswordResetRequest extends FormRequest
         return [
             'email' => ['required', 'email'],
         ];
+    }
+
+    /**
+     * Get the data from the request.
+     */
+    public function toDTO(): SendPasswordResetDTO
+    {
+        $data = $this->validated();
+
+        return new SendPasswordResetDTO(
+            $data['email'],
+        );
     }
 }

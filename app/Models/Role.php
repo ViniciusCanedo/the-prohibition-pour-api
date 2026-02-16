@@ -14,6 +14,7 @@ final class Role extends Model
 {
     /** @use HasFactory<\Database\Factories\RoleFactory> */
     use HasFactory;
+
     use HasUuids;
 
     protected $guarded = [];

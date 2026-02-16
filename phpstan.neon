@@ -10,4 +10,4 @@ parameters:
         - resources/views/
     ignoreErrors:
         - '#^Access to an undefined property .*$#'
-        - '#^Call to an undefined method .*$#'
+        # - '#^Call to an undefined method .*$#'

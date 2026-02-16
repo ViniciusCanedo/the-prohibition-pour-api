@@ -40,7 +40,7 @@ final class UserController extends Controller
      */
     public function show(string $id): UserResource
     {
-        return new UserResource(User::findOrFail($id));
+        return new UserResource(User::with('role')->findOrFail($id));
     }
 
     /**

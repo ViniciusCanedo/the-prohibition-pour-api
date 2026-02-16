@@ -13,6 +13,7 @@ final class Tag extends Model
 {
     /** @use HasFactory<\Database\Factories\TagFactory> */
     use HasFactory;
+
     use HasUuids;
 
     protected $guarded = [];

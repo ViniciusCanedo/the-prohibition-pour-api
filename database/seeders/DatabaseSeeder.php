@@ -22,7 +22,7 @@ final class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissions = Permission::factory(10)->create();
+        $permissions = Permission::all();
         $roles = Role::factory(3)->create();
 
         // Attach permissions to roles

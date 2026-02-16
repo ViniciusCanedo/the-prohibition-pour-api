@@ -7,18 +7,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\PasswordResetRequest;
 use App\Http\Requests\Auth\SendPasswordResetRequest;
-use App\Http\Resources\UserResource;
-use App\Models\User;
-use App\Services\PasswordResetService;
+use App\Services\Auth\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 final class AuthController extends Controller
 {
-    public function __construct(private PasswordResetService $resetPasswordService)
-    {
+    public function __construct(
+        private AuthService $authService
+    ) {
         //
     }
 
@@ -27,22 +25,17 @@ final class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        ['email' => $email, 'password' => $password] = $request->validated();
+        $loginDTO = $request->toDTO();
 
-        $user = User::where('email', $email)->first();
+        $data = $this->authService->login($loginDTO);
 
-        if (! $user || ! Hash::check($password, $user->password)) {
+        if (! $data) {
             return response()->json([
-                'email' => ['Credenciais inválidas.'],
+                'message' => 'Credenciais inválidas.',
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        $token = $user->createToken('authToken')->plainTextToken;
-
-        return response()->json([
-            'token' => $token,
-            'user'  => new UserResource($user),
-        ]);
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -50,9 +43,9 @@ final class AuthController extends Controller
      */
     public function sendPasswordResetEmail(SendPasswordResetRequest $request): JsonResponse
     {
-        $validated = $request->validated();
+        $sendPasswordResetDTO = $request->toDTO();
 
-        $this->resetPasswordService->sendEmail($validated['email']);
+        $this->authService->sendPasswordReset($sendPasswordResetDTO);
 
         return response()->json([
             'message' => 'Solicitação processada. Em alguns minutos, você receberá um e-mail com as instruções para redefinir sua senha.',
@@ -62,11 +55,11 @@ final class AuthController extends Controller
     /**
      * Reset the user password.
      */
-    public function resetPassword(PasswordResetRequest $request, string $token): JsonResponse
+    public function resetPassword(PasswordResetRequest $request): JsonResponse
     {
-        $validated = $request->validated();
+        $passwordResetDTO = $request->toDTO();
 
-        $resetSuccess = $this->resetPasswordService->reset($token, $validated['password']);
+        $resetSuccess = $this->authService->resetPassword($passwordResetDTO);
 
         if (! $resetSuccess) {
             return response()->json([
@@ -86,7 +79,9 @@ final class AuthController extends Controller
     {
         $user = $request->user();
 
-        $user?->currentAccessToken()->delete();
+        if ($user) {
+            $this->authService->logout($user);
+        }
 
         return response()->json([
             'message' => 'Logged out successfully',

@@ -34,7 +34,7 @@ describe('Auth', function () {
                 'password' => 'wrong-password',
             ])->assertUnauthorized()
                 ->assertJson([
-                    'email' => ['Credenciais inválidas.'],
+                    'message' => 'Credenciais inválidas.',
                 ]);
         });
 
@@ -73,7 +73,13 @@ describe('Auth', function () {
         it('can reset password with valid token', function () {
             $user = User::factory()->create();
             $token = 'valid-token';
-            Cache::put("reset_password_token:{$token}", $user->id, 60 * 15);
+
+            $hashedToken = hash('sha256', $token);
+            Cache::put(
+                'reset_password:token:'.$hashedToken,
+                $user->id,
+                900
+            );
 
             postJson(route('resetPassword', $token), [
                 'token'                 => $token,

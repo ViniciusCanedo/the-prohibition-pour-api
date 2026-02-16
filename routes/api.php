@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +14,7 @@ Route::prefix('auth')->group(function (): void {
     Route::post('/send-reset-password-email', [AuthController::class, 'sendPasswordResetEmail'])
         ->name('sendPasswordResetEmail');
 
-    Route::post('/reset-password/{token}', [AuthController::class, 'resetPassword'])
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])
         ->name('resetPassword');
 
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout'])
@@ -35,4 +36,21 @@ Route::prefix('users')->group(function (): void {
 
     Route::delete('/{id}', [UserController::class, 'destroy'])
         ->name('deleteUser');
+});
+
+Route::prefix('roles')->group(function (): void {
+    Route::get('/', [RoleController::class, 'index'])
+        ->name('getRoles');
+
+    Route::post('/', [RoleController::class, 'store'])
+        ->name('postRole');
+
+    Route::get('/{id}', [RoleController::class, 'show'])
+        ->name('getRole');
+
+    Route::put('/{id}', [RoleController::class, 'update'])
+        ->name('putRole');
+
+    Route::delete('/{id}', [RoleController::class, 'destroy'])
+        ->name('deleteRole');
 });

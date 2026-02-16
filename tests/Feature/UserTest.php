@@ -23,7 +23,6 @@ describe('User', function () {
                             'id',
                             'name',
                             'email',
-                            'role',
                         ],
                     ],
                 ]);

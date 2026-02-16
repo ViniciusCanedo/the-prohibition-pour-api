@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Role;
 
-use App\DTOs\Auth\LoginDTO;
+use App\Enums\PermissionEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class LoginRequest extends FormRequest
+final class CreateRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,21 +25,11 @@ final class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'    => ['required', 'string', 'email'],
-            'password' => ['required', 'string', 'min:8'],
+            'name'          => ['required', 'string', 'max:255'],
+            'permissions'   => ['required', 'array'],
+            'permissions.*' => ['required', 'string', 'in:'.implode(',', collect(PermissionEnum::cases())->map(function (PermissionEnum $permission): string {
+                return $permission->name;
+            })->toArray())],
         ];
-    }
-
-    /**
-     * Get the data from the request.
-     */
-    public function toDTO(): LoginDTO
-    {
-        $data = $this->validated();
-
-        return new LoginDTO(
-            $data['email'],
-            $data['password'],
-        );
     }
 }

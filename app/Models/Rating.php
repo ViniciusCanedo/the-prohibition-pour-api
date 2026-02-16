@@ -13,6 +13,7 @@ final class Rating extends Model
 {
     /** @use HasFactory<\Database\Factories\RatingFactory> */
     use HasFactory;
+
     use HasUuids;
 
     protected $guarded = [];
