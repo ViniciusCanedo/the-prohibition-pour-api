@@ -21,7 +21,7 @@ final class AuthService
 
     /**
      * Login a user.
-     * 
+     *
      * @return bool|array{token: string, user: UserResource}
      */
     public function login(LoginDTO $loginDTO): bool|array
