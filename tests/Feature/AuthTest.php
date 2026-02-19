@@ -93,9 +93,8 @@ describe('Auth', function () {
         it('cannot reset password with invalid token', function () {
             $user = User::factory()->create();
 
-            postJson(route('resetPassword', 'invalid-token'), [
+            postJson(route('resetPassword'), [
                 'token'                 => 'invalid-token',
-                'email'                 => $user->email,
                 'password'              => 'new-password',
                 'password_confirmation' => 'new-password',
             ])->assertUnauthorized()
@@ -109,7 +108,7 @@ describe('Auth', function () {
 
             postJson(route('resetPassword', $token), [])
                 ->assertUnprocessable()
-                ->assertJsonValidationErrors(['token', 'email', 'password']);
+                ->assertJsonValidationErrors(['token', 'password']);
         });
     });
 

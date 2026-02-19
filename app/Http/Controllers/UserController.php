@@ -8,18 +8,27 @@ use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\User\UserService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 final class UserController extends Controller
 {
+    public function __construct(
+        private UserService $userService
+    ) {
+        //
+    }
+
     /**
      * Display a listing of the users.
      */
     public function index(): AnonymousResourceCollection
     {
-        return UserResource::collection(User::all());
+        $data = $this->userService->list();
+
+        return UserResource::collection($data);
     }
 
     /**
@@ -27,10 +36,10 @@ final class UserController extends Controller
      */
     public function store(CreateUserRequest $request): JsonResponse
     {
-        $user = User::create($request->validated());
+        $user = $this->userService->create($request->toDTO());
 
         return response()->json([
-            'message' => 'User created successfully',
+            'message' => 'Usuário criado com sucesso',
             'user'    => new UserResource($user),
         ], Response::HTTP_CREATED);
     }
@@ -40,7 +49,9 @@ final class UserController extends Controller
      */
     public function show(string $id): UserResource
     {
-        return new UserResource(User::with('role')->findOrFail($id));
+        $user = $this->userService->show($id);
+
+        return new UserResource($user);
     }
 
     /**
@@ -48,11 +59,10 @@ final class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, string $id): JsonResponse
     {
-        $user = User::findOrFail($id);
-        $user->update($request->validated());
+        $user = $this->userService->update($request->toDTO(), $id);
 
         return response()->json([
-            'message' => 'User updated successfully',
+            'message' => 'Usuário atualizado com sucesso',
             'user'    => new UserResource($user),
         ], Response::HTTP_OK);
     }
@@ -62,11 +72,10 @@ final class UserController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        $this->userService->delete($id);
 
         return response()->json([
-            'message' => 'User deleted successfully',
+            'message' => 'Usuário excluído com sucesso',
         ], Response::HTTP_OK);
     }
 }

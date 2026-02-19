@@ -26,7 +26,6 @@ final class PasswordResetRequest extends FormRequest
     {
         return [
             'token'    => ['required'],
-            'email'    => ['required', 'email'],
             'password' => ['required', 'confirmed', 'min:8'],
         ];
     }
@@ -39,8 +38,8 @@ final class PasswordResetRequest extends FormRequest
         $data = $this->validated();
 
         return new PasswordResetDTO(
-            token: $data['token'],
-            password: $data['password'],
+            $data['token'],
+            $data['password'],
         );
     }
 }

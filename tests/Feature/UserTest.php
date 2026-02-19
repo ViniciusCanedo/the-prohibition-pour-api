@@ -37,16 +37,21 @@ describe('User', function () {
                 'email'                 => 'john@example.com',
                 'password'              => 'password',
                 'password_confirmation' => 'password',
-                'role_id'               => $role->id,
+                'roleId'                => $role->id,
             ];
 
             postJson(route('postUser'), $userData)
                 ->assertCreated()
                 ->assertJsonStructure([
                     'message',
-                    'user',
+                    'user' => [
+                        'id',
+                        'name',
+                        'email',
+                        'role',
+                    ],
                 ])
-                ->assertJson(['message' => 'User created successfully']);
+                ->assertJson(['message' => 'Usuário criado com sucesso']);
 
             $this->assertDatabaseHas('users', ['email' => 'john@example.com']);
         });
@@ -54,7 +59,7 @@ describe('User', function () {
         it('cannot create a user with invalid data', function () {
             postJson(route('postUser'), [])
                 ->assertUnprocessable()
-                ->assertJsonValidationErrors(['name', 'email', 'password', 'role_id']);
+                ->assertJsonValidationErrors(['name', 'email', 'password', 'roleId']);
         });
     });
 
@@ -86,14 +91,14 @@ describe('User', function () {
             $newRole = Role::factory()->create();
 
             $updateData = [
-                'name'    => 'Jane Doe',
-                'email'   => 'jane@example.com',
-                'role_id' => $newRole->id,
+                'name'   => 'Jane Doe',
+                'email'  => 'jane@example.com',
+                'roleId' => $newRole->id,
             ];
 
             putJson(route('putUser', $user->id), $updateData)
                 ->assertOk()
-                ->assertJson(['message' => 'User updated successfully']);
+                ->assertJson(['message' => 'Usuário atualizado com sucesso']);
 
             $this->assertDatabaseHas('users', [
                 'id'    => $user->id,
@@ -109,7 +114,7 @@ describe('User', function () {
 
             deleteJson(route('deleteUser', $user->id))
                 ->assertOk()
-                ->assertJson(['message' => 'User deleted successfully']);
+                ->assertJson(['message' => 'Usuário excluído com sucesso']);
 
             $this->assertDatabaseMissing('users', ['id' => $user->id]);
         });
