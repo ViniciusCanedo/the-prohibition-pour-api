@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Role;
 
+use App\DTOs\Role\CreateRoleDTO;
 use App\Enums\PermissionEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -31,5 +32,15 @@ final class CreateRoleRequest extends FormRequest
                 return $permission->name;
             })->toArray())],
         ];
+    }
+
+    public function toDTO(): CreateRoleDTO
+    {
+        $data = $this->validated();
+
+        return new CreateRoleDTO(
+            $data['name'],
+            $data['permissions'],
+        );
     }
 }
